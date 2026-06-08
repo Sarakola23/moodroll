@@ -28,10 +28,17 @@ export default function Home() {
   }
 
   return (
-    <div style={{ background: '#f8f8ff', minHeight: '100vh' }}>
+    <div style={{ 
+        background: '#f8f8ff', 
+        minHeight: '100vh' 
+        }}>
 
       {/* centered container */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+      <div style={{ 
+        maxWidth: 1200, 
+        margin: '0 auto', 
+        padding: '0 24px' 
+        }}>
 
         {/* hero */}
         <div style={{
@@ -40,10 +47,25 @@ export default function Home() {
           flexDirection: 'column',
           alignItems: 'center',
         }}>
-          <h1 style={{ fontSize: 28, fontWeight: 600, marginBottom: 8, textAlign: 'center', color: '#1a1a2e' }}>
-            What is today's mood?
+          <h1 style={{ 
+            fontSize: 28, 
+            fontWeight: 600, 
+            marginBottom: 8, 
+            textAlign: 'center', 
+            color: '#1a1a2e' 
+            }}>
+            What is today's <span style={{ 
+                background: 'linear-gradient(90deg, #7c3aed, #ec8e6e)', 
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',}}>mood?</span>
           </h1>
-          <p style={{ fontSize: 16, color: '#b1b0b0', marginBottom: 20, textAlign: 'center' }}>
+          <p style={{ 
+            fontSize: 16, 
+            color: '#161616', 
+            marginBottom: 20, 
+            textAlign: 'center', 
+            fontStyle: 'italic',
+            }}>
             Let's find the perfect movie
           </p>
           <SearchBar onSearch={searchMovies} />
@@ -51,7 +73,10 @@ export default function Home() {
         </div>
 
         {/* mood filter — centered */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center' 
+            }}>
           <MovieFilter activeMood={mood} onSelect={setMood} />
         </div>
 
@@ -62,32 +87,59 @@ export default function Home() {
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-          <p style={{ fontSize: 15, fontWeight: 500, color: '#1a1a2e' }}>
+          <p style={{ 
+            fontSize: 15, 
+            fontWeight: 500, 
+            color: '#1a1a2e' 
+            }}>
             {mood ? `${mood.replace('-', ' ')} picks`
             : mediaType === 'movie' ? 'Trending movies' : 'Trending TV Shows'}
           </p>
 
-          <select
-            value={sortBy}
-            onChange={e => setSortBy(e.target.value as SortOption)}
-            style={{
-              fontSize: 13, color: '#1a1a2e', background: '#f8f8ff',
-              border: '1px solid #e0e0e0', padding: '5px 10px',
-              borderRadius: 8, cursor: 'pointer',
-            }}
-          >
-            <option value="popularity">Sort: Popularity</option>
-            <option value="rating">Sort: Rating</option>
-            <option value="year">Sort: Year</option>
-          </select>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 5,
+          }}>
+            <span style={{
+                fontSize: 13,
+                color: '#525252',
+                fontWeight: '500',
+            }}>Sort By:</span>
+            <select
+                value={sortBy}
+                onChange={e => setSortBy(e.target.value as SortOption)}
+                style={{
+                fontSize: 13, 
+                color: '#1a1a2e', 
+                background: '#f8f8ff',
+                border: '1.5px solid #e0e0e0', 
+                padding: '5px 12px',
+                borderRadius: 20, 
+                cursor: 'pointer',
+                }}
+            >
+                <option value="popularity">Popularity</option>
+                <option value="rating">Rating</option>
+                <option value="year">Year</option>
+            </select>
+            </div>
         </div>
 
         {/* loading / error */}
         {loading && (
-          <p style={{ padding: '40px 0', textAlign: 'center', color: '#aaa' }}>Loading...</p>
+          <p style={{ 
+            padding: '40px 0', 
+            textAlign: 'center', 
+            color: '#aaa' 
+        }}>Loading...</p>
         )}
         {error && (
-          <p style={{ padding: '40px 0', textAlign: 'center', color: 'red' }}>{error}</p>
+          <p style={{ 
+            padding: '40px 0', 
+            textAlign: 'center', 
+            color: 'red' 
+        }}>{error}</p>
         )}
 
         {/* movie grid */}
@@ -108,7 +160,12 @@ export default function Home() {
 
         {/* pagination */}
         {totalPages > 1 && (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6, padding: '8px 0 32px' }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            gap: 6, 
+            padding: '8px 0 32px' }}>
             <button
               onClick={() => goToPage(page - 1)}
               disabled={page === 1}

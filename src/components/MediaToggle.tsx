@@ -10,7 +10,7 @@ export default function MediaToggle({ mediaType, onToggle }: Props) {
         <div 
             style={{
                 display: 'inline-flex',
-                background: '#fdf5e6',
+                gap: 4,
                 border: '0.5px solid var(--color-border-tertiary)',
                 borderRadius: 20,
                 padding: 3,
@@ -27,8 +27,8 @@ export default function MediaToggle({ mediaType, onToggle }: Props) {
                             fontSize: 13,
                             fontWeight: mediaType === type ? 500 : 400,
                             cursor: 'pointer',
-                            background: mediaType === type ? '#d85a30' : 'transparent',
-                            color: mediaType === type ? '#fff' : 'var(--color-text-secondary)',
+                            background: mediaType === type ? '#bf94e4' : 'transparent',
+                            color: mediaType === type ? '#ffffff' : 'var(--color-text-secondary)',
                             transition: 'all 0.15s ease',
                         }}
                     >
