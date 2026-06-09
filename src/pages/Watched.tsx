@@ -1,13 +1,18 @@
+import { useWatched } from "../context/WatchedContext"
 import MovieCard from "../components/MovieCard"
 import type { Movie } from "../types/movies"
 import MovieModal from "../components/MovieModal"
 import { useState } from "react"
-import { useWatched } from "../context/WatchedContext"
 
 export default function Watched() {
   const { watched } = useWatched()
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null)
+   const [selectedType, setSelectedType] = useState<'movie' | 'tv'>('movie')
 
+  const movieFavorites = watched.filter(m => (m as any).mediaType === 'movie' || !(m as any).mediaType)
+  const tvFavorites = watched.filter(m => (m as any).mediaType === 'tv')
+  const displayed = selectedType === 'movie' ? movieFavorites : tvFavorites
+  
   return (
     <div style={{
       background: '#f8f8ff',
@@ -26,6 +31,36 @@ export default function Watched() {
           color: '#1a1a2e',
         }}
         >Your watched</h1>
+
+        <div style={{ 
+          display: 'inline-flex', 
+          background: 'white', 
+          border: '1px solid #e0e0e0', 
+          borderRadius: 20, 
+          padding: 3, 
+          gap: 4, 
+          marginTop: 12 
+        }}>
+        {(['movie', 'tv'] as const).map(type => (
+          <button
+            key={type}
+            onClick={() => setSelectedType(type)}
+            style={{
+              padding: '6px 18px',
+              borderRadius: 20,
+              border: 'none',
+              fontSize: 13,
+              fontWeight: selectedType === type ? 500 : 400,
+              cursor: 'pointer',
+              background: selectedType === type ? '#7c3aed' : 'transparent',
+              color: selectedType === type ? 'white' : '#888',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            {type === 'movie' ? `🎬 Movies (${movieFavorites.length})` : `📺 TV Shows (${tvFavorites.length})`}
+          </button>
+        ))}
+        </div>
         <p style={{
           fontSize: 14,
           color: '#b1b0b0'
@@ -63,14 +98,14 @@ export default function Watched() {
           gap: 12,
           padding: '8px 24px 32px',
         }}>
-          {watched.map(movie => (
+          {displayed.map(movie => (
             <div
               key={movie.id}
               onClick={() => setSelectedMovie(movie)}
               style={{
                 cursor: 'pointer'
               }}>
-              <MovieCard movie={movie}/>
+              <MovieCard movie={movie} mediaType={selectedType}/>
             </div>
           ))}
     </div>
@@ -78,7 +113,7 @@ export default function Watched() {
    {selectedMovie && (
         <MovieModal
           movie={selectedMovie}
-          mediaType="movie"
+          mediaType={selectedType}
           onClose={() => setSelectedMovie(null)}
         />
       )}

@@ -4,8 +4,8 @@ import { supabase } from '../utils/supabase'
 import { useAuth } from './AuthContext'
 
 interface WatchedContextType {
-  watched: Movie[]
-  addWatched: (movie: Movie) => Promise<void>
+  watched: (Movie & { mediaType: 'movie' | 'tv' })[]
+  addWatched: (movie: Movie, mediaType: 'movie' | 'tv') => Promise<void>
   removeWatched: (id: number) => Promise<void>
   isWatched: (id: number) => boolean
 }
@@ -14,9 +14,9 @@ const WatchedContext = createContext<WatchedContextType | null>(null)
 
 export function WatchedProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth()
-  const [watched, setWatched] = useState<Movie[]>(() => {
+  const [watched, setWatched] = useState<(Movie & { mediaType: 'movie' | 'tv' })[]>(() => {
     try {
-      const stored = localStorage.getItem('moodroll-watched')
+      const stored = localStorage.getItem('moodroll-favorites')
       return stored ? JSON.parse(stored) : []
     } catch {
       return []
@@ -41,17 +41,26 @@ export function WatchedProvider({ children }: { children: React.ReactNode }) {
       .select('movie_data')
       .order('created_at', { ascending: false })
     if (error) return
-    setWatched(data.map(row => row.movie_data as Movie))
+    setWatched(data.map(row => {
+      const movieData = row.movie_data as Movie & { mediaType?: 'movie' | 'tv' }
+      return movieData.mediaType
+        ? (movieData as Movie & { mediaType: 'movie' | 'tv' })
+        : {
+            ...movieData,
+            mediaType: (movieData as any).first_air_date ? 'tv' : 'movie'
+          }
+    }))
   }
 
-  const addWatched = async (movie: Movie) => {
-    if (watched.find(m => m.id === movie.id)) return
-    setWatched(prev => [...prev, movie])
+  const addWatched = async (movie: Movie, mediaType: 'movie' | 'tv' = 'movie') => {
+    if (watched.find(m => m.id === movie.id && m.mediaType === mediaType)) return
+    const movieWithType = { ...movie, mediaType }
+    setWatched(prev => [...prev, movieWithType])
     if (user) {
-      await supabase.from('watched').insert({
+      await supabase.from('favorites').insert({
         user_id: user.id,
         movie_id: movie.id,
-        movie_data: movie,
+        movie_data: movieWithType,
       })
     }
   }

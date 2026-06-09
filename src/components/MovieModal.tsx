@@ -159,7 +159,7 @@ export default function MovieModal({ movie, mediaType, onClose }: Props) {
               </button>
 
               <button
-                onClick={() => watched ? removeWatched(movie.id) : addWatched(movie)}
+                onClick={() => watched ? removeWatched(movie.id) : addWatched(movie, mediaType)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
