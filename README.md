@@ -1,73 +1,38 @@
-# React + TypeScript + Vite
+# Moodroll
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Moodroll is a webpage designed to help users discover movies and tv shows. 
+  User has the ability to like, view any description of movies/tv shows and add anything that they have watched. 
+  User also has the ability to sign in/sign up (no email needed) so anything they do is saved and can access the information later. 
+  A cool feature is the surprise button which generates a random movie/tv show based on the desires of the user.
 
-Currently, two official plugins are available:
+## Features
+1. Search movies and tv shows
+2. Filter by mood
+3. Sort by rating, popularity and release date(which is set to latest to oldest)
+4. Toggle to switch between movies and tv shows
+5. Ability to favorite movies/tv shows and add as watched
+6. Ability to sign in/sign up to save in database for later
+7. Surprise me button to generate a random movie/tv show to give user some idea of what to watch
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech part
+Frontend:
+1. React
+2. TypeScript
+3. Vite
+4. React Router
 
-## React Compiler
+Backend:
+1. Supabase
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+External APIs:
+- TMDB
 
-## Expanding the ESLint configuration
+## Future improvements
+1. Ratings and reviews
+2. Where to watch each movie/tv show
+3. More filtering
+4. Social board to connect and comment 
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Author
+Sara Kola
+- Created to be a portfolio project.
