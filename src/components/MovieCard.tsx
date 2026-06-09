@@ -5,9 +5,10 @@ const IMG_BASE = 'https://image.tmdb.org/t/p/w300'
 
 interface Props {
     movie: Movie
+    mediaType?: 'movie' | 'tv'
 }
 
-export default function MovieCard({ movie }: Props) {
+export default function MovieCard({ movie, mediaType = 'movie' }: Props) {
     const { isFavorite, addFavorite, removeFavorite } = useFavorites()
     const fav = isFavorite(movie.id)
 
@@ -43,7 +44,7 @@ export default function MovieCard({ movie }: Props) {
                 </div>
             )}
             <button
-                onClick={() => fav ? removeFavorite(movie.id) : addFavorite(movie)}
+                onClick={() => fav ? removeFavorite(movie.id) : addFavorite(movie, mediaType)}
                 style={{
                     position: 'absolute',
                     top: 8,

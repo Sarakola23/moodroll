@@ -3,16 +3,18 @@ import { useFavorites } from '../context/FavoritesContext'
 import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { useWatched } from '../context/WatchedContext'
 
 export default function Navbar() {
   const { favorites } = useFavorites()
+  const { watched } = useWatched()
   const location = useLocation()
 
   // drop down for user profile
   const [dropDown, setDropDown] = useState(false)
   const dropDownRef = useRef<HTMLDivElement>(null)
 
-  const { user, signOut } = useAuth()
+  const { user, username, signOut } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -105,6 +107,23 @@ export default function Navbar() {
             </span>
           )}
         </Link>
+          <Link to="/surprise" style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            fontSize: 13,
+            textDecoration: 'none',
+            color: location.pathname === '/surprise' ? '#1a1a2e' : '#aaa',
+            fontWeight: location.pathname === '/surprise' ? 500 : 400,
+            padding: '0 0 4px 0',
+            borderBottom: location.pathname === '/surprise' ? '2px solid transparent' : 'none',
+            backgroundImage: location.pathname === '/surprise' ? 'linear-gradient(90deg, #7c3aed, #ec8e6e)' : 'none',
+            backgroundSize: '100% 2px',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'bottom',
+          }}>
+            Surprise
+          </Link>
       </div>
       <div ref={dropDownRef} style={{ position: 'relative' }}>
         <div
@@ -122,7 +141,7 @@ export default function Navbar() {
             fontWeight: 400,
             color: 'white',
             flexShrink: 0,
-          }}>{user ? user.email?.[0].toUpperCase() : '?'}
+          }}>{user ? username?.[0].toUpperCase() ?? '?' : '?'}
           </div>
 
         {dropDown && (
@@ -152,7 +171,7 @@ export default function Navbar() {
                         color: '#1a1a2e',
                         margin: 0
                       }}
-                    >{user.email}</p>
+                    >{username}</p>
                     <p style={{
                       fontSize: 11,
                       color: '#aaa',
@@ -185,7 +204,7 @@ export default function Navbar() {
                 >Sign in</div>
                 <div
                   onClick={() => { 
-                    navigate('/auth'); 
+                    navigate('/auth?mode=signup'); 
                     setDropDown(false) 
                   }}
                   style={{ 
@@ -200,6 +219,38 @@ export default function Navbar() {
                 </>
             ) : (
               <>
+
+                <div
+                onClick={() => { 
+                  navigate('/watched');
+                  setDropDown(false)
+                }}
+                style={{
+                  padding: '10px 16px',
+                  fontSize: 13,
+                  color: '#1a1a2e',
+                  cursor: 'pointer',
+                  borderBottom: '1px solid #f0f0f0',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#f8f8ff')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'white')}>
+                <span>Watched</span>
+
+                {watched.length > 0 && (
+                  <span
+                    style={{
+                      background: '#7c3aed',
+                      color: 'white',
+                      fontSize: 11,
+                      fontWeight: 500,
+                      borderRadius: 10,
+                      padding: '1px 6px'
+                    }}>{watched.length}</span>
+                )}
+                </div>
                 <div
                   onClick={() => { 
                     navigate('/'); 

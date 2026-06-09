@@ -1,25 +1,60 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export default function Auth() {
-  const { signIn, signUp } = useAuth()
+  const { signIn, signUp, checkUsername } = useAuth()
   const navigate = useNavigate()
-  const [isSignUp, setIsSignUp] = useState(false)
-  const [email, setEmail] = useState('')
+  const [searchParams] = useSearchParams()
+  const [isSignUp, setIsSignUp] = useState(() => searchParams.get('mode') === 'signup')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'taken' | 'available'>('idle')
+
+  // live username check when signing up
+  useEffect(() => {
+    if (!isSignUp || username.length < 3) {
+      setUsernameStatus('idle')
+      return
+    }
+    setUsernameStatus('checking')
+    const timer = setTimeout(async () => {
+      const taken = await checkUsername(username)
+      setUsernameStatus(taken ? 'taken' : 'available')
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [username, isSignUp])
 
   const handleSubmit = async () => {
+    if (username.length < 3) return setError('Username must be at least 3 characters')
+    if (password.length < 6) return setError('Password must be at least 6 characters')
     setLoading(true)
     setError(null)
     const err = isSignUp
-      ? await signUp(email, password)
-      : await signIn(email, password)
+      ? await signUp(username, password)
+      : await signIn(username, password)
     setLoading(false)
     if (err) return setError(err)
     navigate('/')
+  }
+
+  const usernameColor = () => {
+    if (usernameStatus === 'taken') return '#e05c5c'
+    if (usernameStatus === 'available') return '#22c55e'
+    return '#e0e0e0'
+  }
+
+  useEffect(() => {
+    setIsSignUp(searchParams.get('mode') === 'signup')
+  }, [searchParams])
+
+  const usernameHint = () => {
+    if (usernameStatus === 'checking') return '⏳ Checking...'
+    if (usernameStatus === 'taken') return '✗ Username already taken'
+    if (usernameStatus === 'available') return '✓ Username available'
+    return ''
   }
 
   return (
@@ -42,30 +77,42 @@ export default function Auth() {
           {isSignUp ? 'Create account' : 'Welcome back'}
         </h2>
         <p style={{ fontSize: 14, color: '#aaa', marginBottom: 24 }}>
-          {isSignUp ? 'Sign up to save your favorites' : 'Sign in to your account'}
+          {isSignUp ? 'Pick a username to get started' : 'Sign in with your username'}
         </p>
 
         {error && (
           <p style={{ fontSize: 13, color: 'red', marginBottom: 16 }}>{error}</p>
         )}
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '10px 14px',
-            borderRadius: 8,
-            border: '1px solid #e0e0e0',
-            fontSize: 14,
-            marginBottom: 12,
-            boxSizing: 'border-box',
-            outline: 'none',
-          }}
-        />
+        {/* username input */}
+        <div style={{ marginBottom: 12 }}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '10px 14px',
+              borderRadius: 8,
+              border: `1px solid ${usernameColor()}`,
+              fontSize: 14,
+              boxSizing: 'border-box',
+              outline: 'none',
+            }}
+          />
+          {isSignUp && usernameHint() && (
+            <p style={{
+              fontSize: 11,
+              marginTop: 4,
+              color: usernameStatus === 'available' ? '#22c55e' : usernameStatus === 'taken' ? '#e05c5c' : '#aaa'
+            }}>
+              {usernameHint()}
+            </p>
+          )}
+        </div>
 
+        {/* password input */}
         <input
           type="password"
           placeholder="Password"
@@ -86,7 +133,7 @@ export default function Auth() {
 
         <button
           onClick={handleSubmit}
-          disabled={loading}
+          disabled={loading || (isSignUp && usernameStatus === 'taken')}
           style={{
             width: '100%',
             padding: '11px',
@@ -97,7 +144,7 @@ export default function Auth() {
             fontSize: 14,
             fontWeight: 600,
             cursor: loading ? 'not-allowed' : 'pointer',
-            opacity: loading ? 0.7 : 1,
+            opacity: loading || usernameStatus === 'taken' ? 0.7 : 1,
           }}
         >
           {loading ? 'Loading...' : isSignUp ? 'Sign up' : 'Sign in'}
@@ -106,7 +153,13 @@ export default function Auth() {
         <p style={{ fontSize: 13, color: '#aaa', textAlign: 'center', marginTop: 16 }}>
           {isSignUp ? 'Already have an account?' : "Don't have an account?"}
           <span
-            onClick={() => setIsSignUp(prev => !prev)}
+            onClick={() => {
+              const nextMode = !isSignUp
+              setIsSignUp(nextMode)
+              setError(null)
+              setUsernameStatus('idle')
+              navigate(nextMode ? '/auth?mode=signup' : '/auth', { replace: true })
+            }}
             style={{ color: '#7c3aed', cursor: 'pointer', marginLeft: 4 }}
           >
             {isSignUp ? 'Sign in' : 'Sign up'}

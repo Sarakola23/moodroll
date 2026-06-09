@@ -52,7 +52,7 @@ export function useMovies() {
         `${BASE_URL}/trending/${mediaType}/week?page=${pageNum}`, { headers })
       const data: TMDBResponse = await res.json()
       setMovies(data.results)
-      setTotalPages(Math.min(data.total_pages, 100))
+      setTotalPages(Math.min(data.total_pages, 500))
     } catch (err) {
       setError('Failed to fetch movies.')
     } finally {
@@ -71,7 +71,7 @@ export function useMovies() {
       )
       const data: TMDBResponse = await res.json()
       setMovies(data.results)
-      setTotalPages(Math.min(data.total_pages, 100))
+      setTotalPages(Math.min(data.total_pages, 500))
     } catch (err) {
       setError('Search failed.')
     } finally {
@@ -91,7 +91,7 @@ export function useMovies() {
     )
       const data: TMDBResponse = await res.json()
       setMovies(data.results)
-      setTotalPages(Math.min(data.total_pages, 100))
+      setTotalPages(Math.min(data.total_pages, 500))
     } catch (err) {
       setError('Failed to fetch by mood.')
     } finally {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Movie, MovieDetails } from '../types/movies'
 import { useFavorites } from '../context/FavoritesContext'
+import { useWatched } from '../context/WatchedContext'
 
 const IMG_BASE = 'https://image.tmdb.org/t/p/w500'
 const BACKDROP_BASE = 'https://image.tmdb.org/t/p/w1280'
@@ -16,6 +17,9 @@ export default function MovieModal({ movie, mediaType, onClose }: Props) {
   const [details, setDetails] = useState<MovieDetails | null>(null)
   const { isFavorite, addFavorite, removeFavorite } = useFavorites()
   const fav = isFavorite(movie.id)
+
+  const { isWatched, addWatched, removeWatched } = useWatched()
+  const watched = isWatched(movie.id)
 
   const title = (movie as any).title ?? (movie as any).name
   const date = (movie as any).release_date ?? (movie as any).first_air_date
@@ -136,7 +140,7 @@ export default function MovieModal({ movie, mediaType, onClose }: Props) {
 
               {/* favorite button */}
               <button
-                onClick={() => fav ? removeFavorite(movie.id) : addFavorite(movie)}
+                onClick={() => fav ? removeFavorite(movie.id) : addFavorite(movie, mediaType)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -152,6 +156,25 @@ export default function MovieModal({ movie, mediaType, onClose }: Props) {
                 }}
               >
                 {fav ? '❤️ Saved' : '🤍 Save'}
+              </button>
+
+              <button
+                onClick={() => watched ? removeWatched(movie.id) : addWatched(movie)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 5,
+                  padding: '3px 12px',
+                  borderRadius: 20,
+                  border: '1.5px solid #f28b82',
+                  background: watched ? '#fff0f0' : 'transparent',
+                  color: '#e05c5c',
+                  fontSize: 12,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                }}
+              >
+                {watched ? 'Watched' : 'Mark watched'}
               </button>
             </div>
 

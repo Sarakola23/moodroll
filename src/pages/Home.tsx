@@ -152,7 +152,7 @@ export default function Home() {
           }}>
             {movies.map(movie => (
               <div key={movie.id} onClick={() => setSelectedMovie(movie)} style={{ cursor: 'pointer' }}>
-                <MovieCard movie={movie} />
+                <MovieCard movie={movie} mediaType={mediaType}/>
               </div>
             ))}
           </div>

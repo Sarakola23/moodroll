@@ -11,3 +11,50 @@ body {
   color: #1a1a2e;
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
 }
+
+.surprise-hero {
+  position: relative;
+  background: transparent;
+  overflow: hidden;
+  padding: 40px 20px 0px;
+  text-align: center;
+}
+
+.surprise-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 60px;
+  background: transparent;
+}
+
+.surprise-title {
+  font-size: 56px;
+  font-weight: 800;
+  color: rgb(0, 0, 0);
+  line-height: 1.1;
+  letter-spacing: -2px;
+  margin-bottom: 4px;
+}
+
+.surprise-title-gradient {
+  font-size: 56px;
+  font-weight: 800;
+  font-style: italic;
+  line-height: 1.2;
+  letter-spacing: -2px;
+  background: linear-gradient(90deg, #a855f7, #ec8e6e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.surprise-subtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.5);
+}

@@ -4,8 +4,8 @@ import { supabase } from '../utils/supabase'
 import { useAuth } from './AuthContext'
 
 interface FavoritesContextType {
-  favorites: Movie[]
-  addFavorite: (movie: Movie) => Promise<void>
+  favorites: (Movie & { mediaType: 'movie' | 'tv' })[]
+  addFavorite: (movie: Movie, mediaType: 'movie' | 'tv') => Promise<void>
   removeFavorite: (id: number) => Promise<void>
   isFavorite: (id: number) => boolean
 }
@@ -14,7 +14,7 @@ const FavoritesContext = createContext<FavoritesContextType | null>(null)
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth()
-  const [favorites, setFavorites] = useState<Movie[]>(() => {
+  const [favorites, setFavorites] = useState<(Movie & { mediaType: 'movie' | 'tv' })[]>(() => {
     try {
       const stored = localStorage.getItem('moodroll-favorites')
       return stored ? JSON.parse(stored) : []
@@ -52,21 +52,27 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       return
     }
 
-    setFavorites(data.map(row => row.movie_data as Movie))
+    setFavorites(data.map(row => {
+      const movieData = row.movie_data as Movie & { mediaType?: 'movie' | 'tv' }
+      return movieData.mediaType
+        ? (movieData as Movie & { mediaType: 'movie' | 'tv' })
+        : {
+            ...movieData,
+            mediaType: (movieData as any).first_air_date ? 'tv' : 'movie'
+          }
+    }))
   }
 
-  const addFavorite = async (movie: Movie) => {
-    if (favorites.find(m => m.id === movie.id)) return
-
-    setFavorites(prev => [...prev, movie])
-
+  const addFavorite = async (movie: Movie, mediaType: 'movie' | 'tv' = 'movie') => {
+    if (favorites.find(m => m.id === movie.id && m.mediaType === mediaType)) return
+    const movieWithType = { ...movie, mediaType }
+    setFavorites(prev => [...prev, movieWithType])
     if (user) {
-      const { error } = await supabase.from('favorites').insert({
+      await supabase.from('favorites').insert({
         user_id: user.id,
         movie_id: movie.id,
-        movie_data: movie,
+        movie_data: movieWithType,
       })
-      if (error) console.error('Failed to save favorite:', error)
     }
   }
 
@@ -86,7 +92,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const isFavorite = (id: number) => favorites.some(m => m.id === id)
 
   return (
-    <FavoritesContext.Provider value={{ favorites, addFavorite, removeFavorite, isFavorite }}>
+    <FavoritesContext.Provider value={{ favorites: favorites as (Movie & { mediaType: 'movie' | 'tv'})[], addFavorite, removeFavorite, isFavorite }}>
       {children}
     </FavoritesContext.Provider>
   )
