@@ -59,7 +59,8 @@ export default function Navbar() {
       <div style={{ 
         display: 'flex', 
         alignItems: 'center', 
-        gap: 24, 
+        gap: 16, 
+        flexWrap: 'wrap',
         }}>
 
         <Link to="/" style={{
