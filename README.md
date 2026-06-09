@@ -36,3 +36,19 @@ External APIs:
 ## Author
 Sara Kola
 - Created to be a portfolio project.
+
+## Images
+Home page:
+<img width="2952" height="1666" alt="image" src="https://github.com/user-attachments/assets/51819a8d-6dea-4e5e-b4f1-af8ec01a12a0" />
+Favorites page:
+<img width="2950" height="1674" alt="image" src="https://github.com/user-attachments/assets/a9b1421c-a2ed-4cd1-a08f-873121d0d018" />
+Surprise me:
+<img width="2950" height="1678" alt="image" src="https://github.com/user-attachments/assets/c55c6581-6770-467e-bf14-11a767497bae" />
+Watched page:
+<img width="2958" height="1668" alt="image" src="https://github.com/user-attachments/assets/82f72ca2-5fb0-4f25-a5e4-d6083163bb72" />
+Sign up page:
+<img width="2952" height="1668" alt="image" src="https://github.com/user-attachments/assets/457d9c0f-05be-4f7e-80dd-f7f673d81e1a" />
+
+
+
+
