@@ -1,4 +1,3 @@
-import { useFavorites } from "../context/FavoritesContext"
 import MovieCard from "../components/MovieCard"
 import type { Movie } from "../types/movies"
 import MovieModal from "../components/MovieModal"
