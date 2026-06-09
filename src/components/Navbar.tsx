@@ -17,6 +17,9 @@ export default function Navbar() {
   const { user, username, signOut } = useAuth()
   const navigate = useNavigate()
 
+  // mobile
+  const isMobile = window.innerWidth < 768
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropDownRef.current && !dropDownRef.current.contains(e.target as Node)){
@@ -58,8 +61,9 @@ export default function Navbar() {
 
       <div style={{ 
         display: 'flex', 
+        flexDirection: isMobile ? 'row' : 'row',
         alignItems: 'center', 
-        gap: 16, 
+        gap: isMobile ? 12 : 0, 
         flexWrap: 'wrap',
         }}>
 
